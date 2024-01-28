@@ -13,7 +13,21 @@ int getPassword(char*, int);
 int main(int argc, char const *argv[]) {
 	
 	char password[11];
-	return getPassword(password, sizeof(password) / sizeof(password[0]) -1);
+	if (getPassword(password, sizeof(password) / sizeof(password[0]) -1) != 0) {
+		return 1;
+	}
+
+	FILE* fp;
+	fp = fopen("passwordStorage.txt", "w");
+	
+	if (fputs(password, fp) == EOF) {
+		printf("Failed to write to file.\n");
+		return 1;
+	}
+
+	fclose(fp);
+
+	return 0;
 }
 
 int getPassword(char* passwordPtr, int maxCharacters) {
@@ -32,7 +46,7 @@ int getPassword(char* passwordPtr, int maxCharacters) {
 	strncpy(password, input, maxCharacters+1);
 	
 	printf("Your password is: %s\n", password);
-	passwordPtr = password;
+	strcpy(passwordPtr, password);
 
 	return 0;
 }
